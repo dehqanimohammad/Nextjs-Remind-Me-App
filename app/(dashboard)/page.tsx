@@ -1,3 +1,4 @@
+import CollectionCard from "@/components/CollectionCard";
 import CreateCollectionBtn from "@/components/CreateCollectionBtn";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import prisma from "@/lib/prisma";
@@ -44,4 +45,15 @@ async function CollectionList() {
       </div>
     );
   }
+
+  return (
+    <>
+      <CreateCollectionBtn />
+      <div className="flex flex-col gap-4 mt-10">
+        {collections.map((collection) => (
+          <CollectionCard key={collection.id} collection={collection} />
+        ))}
+      </div>
+    </>
+  );
 }
