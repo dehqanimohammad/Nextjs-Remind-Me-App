@@ -139,7 +139,6 @@ function CreateTaskDialog({ open, collection, setOpen }: Props) {
                             mode="single"
                             selected={field.value}
                             onSelect={field.onChange}
-                            initialFocus
                           />
                         </PopoverContent>
                       </Popover>
