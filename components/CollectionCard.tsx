@@ -1,7 +1,7 @@
 "use client";
 
-import { Collection } from "@prisma/client";
-import React, { useState } from "react";
+import { Collection, Task } from "@prisma/client";
+import React, { useState, useTransition } from "react";
 import {
   Collapsible,
   CollapsibleContent,
@@ -18,14 +18,51 @@ import {
 } from "@radix-ui/react-icons";
 import { Progress } from "./ui/progress";
 import { Separator } from "./ui/separator";
+import {
+  AlertDialog,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogTitle,
+} from "./ui/alert-dialog";
+import {
+  AlertDialogAction,
+  AlertDialogTrigger,
+} from "@radix-ui/react-alert-dialog";
+import { deleteCollection } from "@/actions/collection";
+import { toast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
 
 interface Props {
-  collection: Collection;
+  collection: Collection & {
+    tasks: Task[];
+  };
 }
-const tasks: string[] = ["task"];
 
 function CollectionCard({ collection }: Props) {
   const [isOpen, setIsOpen] = useState(true);
+  const router = useRouter();
+  const [isLoading, startTransition] = useTransition();
+
+  const tasks = collection.tasks;
+
+  const removeColleection = async () => {
+    try {
+      await deleteCollection(collection.id);
+      toast({
+        title: "success",
+        description: "Collection deleted successfully",
+      });
+      router.refresh();
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Cannot delete selected collection",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
       <CollapsibleTrigger asChild>
@@ -57,14 +94,32 @@ function CollectionCard({ collection }: Props) {
         <Separator />
         <footer className="h-[40px] px-4 p-[2px] text-xs text-neutral-500 flex justify-between items-center">
           <p>Created at {collection.createdAt.toDateString()}</p>
-          <div>
-            <Button variant={"ghost"} size={"icon"}>
-              <PlusCircledIcon />
-            </Button>
-            <Button variant={"ghost"} size={"icon"}>
-              <TrashIcon />
-            </Button>
-          </div>
+          {isLoading && <div>Deleting ...</div>}
+          {!isLoading && (
+            <div>
+              <Button variant={"ghost"} size={"icon"}>
+                <PlusCircledIcon />
+              </Button>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button variant={"ghost"} size={"icon"}>
+                    <TrashIcon />
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogTitle>Are you sure???</AlertDialogTitle>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => startTransition(removeColleection)}
+                    >
+                      Delete
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          )}
         </footer>
       </CollapsibleContent>
     </Collapsible>
