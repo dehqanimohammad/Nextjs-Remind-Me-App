@@ -58,6 +58,7 @@ function CreateTaskDialog({ open, collection, setOpen }: Props) {
       });
       openChangeWrapper(false);
       router.refresh();
+      form.reset();
     } catch (e) {
       toast({
         title: "Error occurred",
