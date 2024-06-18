@@ -57,11 +57,11 @@ Deployment
 
 Choose a Platform:
 
-Vercel (https://vercel.com/) (already deployed to https://nextjs-remind-me-app-navy.vercel.app/)
-Netlify (https://www.netlify.com/)
-AWS Amplify (https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html)
-Heroku (https://www.heroku.com/)
-Others (follow platform-specific instructions)
+Vercel (https://vercel.com/) (already deployed to https://nextjs-remind-me-app-navy.vercel.app/).
+Netlify (https://www.netlify.com/).
+AWS Amplify (https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html).
+Heroku (https://www.heroku.com/).
+Others (follow platform-specific instructions).
 Build for Production:
 
 ```bash
